@@ -1,0 +1,31 @@
+name: Build and Publish .NET Project
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.x'
+
+    - name: Install Dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+
+    - name: Upload Executable
+      uses: actions/upload-artifact@v3
+      with:
+        name: compiled-exe
+        path: ./POS.InventoryManagementSystem/bin/Release/net6.0/win-x64/publish/*.exe
