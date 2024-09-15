@@ -1,0 +1,35 @@
+name: .NET Framework Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Setup NuGet for package restoration
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1
+
+      # Step 3: Restore NuGet packages
+      - name: Restore NuGet packages
+        run: nuget restore ./POS.InventoryManagementSystem/POS.InventoryManagementSystem.sln
+
+      # Step 4: Build the solution using MSBuild
+      - name: Build solution
+        run: msbuild ./POS.InventoryManagementSystem/POS.InventoryManagementSystem.sln /p:Configuration=Release
+
+      # Step 5: Publish the build artifacts (including the .exe)
+      - name: Publish Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: pos-application
+          path: ./POS.InventoryManagementSystem/bin/Release
