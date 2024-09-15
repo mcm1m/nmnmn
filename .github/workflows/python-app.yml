@@ -1,0 +1,17 @@
+import subprocess
+
+# Command to build and publish the .NET project
+command = [
+    'dotnet', 'publish', 'POS.InventoryManagementSystem/POS.InventoryManagementSystem.csproj',
+    '-c', 'Release', '-r', 'win-x64', '--self-contained', '-p:PublishSingleFile=true'
+]
+
+# Run the command
+result = subprocess.run(command, capture_output=True, text=True)
+
+# Check if the command was successful
+if result.returncode == 0:
+    print("Build successful. .exe file has been created.")
+else:
+    print("Build failed. Error output:")
+    print(result.stderr)
